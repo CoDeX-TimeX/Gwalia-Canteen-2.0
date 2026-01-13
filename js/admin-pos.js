@@ -57,7 +57,7 @@ window.handleLogin = function () {
     const pin = document.getElementById('adminPin').value;
 
     // In production, use Firebase Authentication!
-    if (pin === 'admin123') {
+    if (pin === 'admin') {
         document.getElementById('loginScreen').style.display = 'none';
         document.getElementById('posApp').style.display = 'block';
 
@@ -65,7 +65,7 @@ window.handleLogin = function () {
         listenToLiveStats();
         updateHistoryFilter();
     } else {
-        alert('Invalid PIN. Try: admin123');
+        alert('Invalid PIN. Try: admin');
     }
 };
 
@@ -477,4 +477,5 @@ window.closeDetailModal = function () {
 function handleError(error) {
     console.error('Firebase error:', error);
     alert('Connection error. Please check your internet connection.');
+
 }
