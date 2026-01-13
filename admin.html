@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS Terminal - Gwalia</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body class="dark-mode">
+    <!-- Login Screen -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-card">
+            <div class="login-icon">💳</div>
+            <h1>Cashier POS</h1>
+            <p>Enter PIN to access</p>
+            <input type="password" id="adminPin" class="pin-input" placeholder="••••" maxlength="6" autocomplete="off">
+            <button class="btn-primary btn-lg" onclick="handleLogin()">Login</button>
+            <div class="login-hint">Default PIN: admin123</div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div class="pos-app" id="posApp" style="display: none;">
+        <!-- Header -->
+        <header class="pos-header">
+            <div class="pos-brand">
+                <div class="brand-icon">💳</div>
+                <div>
+                    <h1>POS Terminal</h1>
+                    <p id="currentDate">--</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <a href="analytics.html" class="icon-btn">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="20" x2="18" y2="10"></line>
+                        <line x1="12" y1="20" x2="12" y2="4"></line>
+                        <line x1="6" y1="20" x2="6" y2="14"></line>
+                    </svg>
+                </a>
+                <a href="manager.html" class="icon-btn">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M12 1v6m0 6v6m-6-6H0m6 0h6m6 0h6m-6 0H12"></path>
+                    </svg>
+                </a>
+                <button class="icon-btn" onclick="handleLogout()">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Stats Cards -->
+        <div class="stats-container">
+            <div class="stat-card primary">
+                <div class="stat-icon">💰</div>
+                <div class="stat-content">
+                    <div class="stat-label">Today's Revenue</div>
+                    <div class="stat-value">₹<span id="dailyRevenue">0</span></div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🎫</div>
+                <div class="stat-content">
+                    <div class="stat-label">Orders</div>
+                    <div class="stat-value"><span id="dailyOrders">0</span></div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🏆</div>
+                <div class="stat-content">
+                    <div class="stat-label">Last Token</div>
+                    <div class="stat-value">#<span id="lastToken">--</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- History Section -->
+        <div class="content-section">
+            <div class="section-header">
+                <h2>Recent Orders</h2>
+                <select id="historyFilter" class="filter-select">
+                    <option value="today">Today</option>
+                    <option value="yesterday">Yesterday</option>
+                    <option value="week">Last 7 Days</option>
+                </select>
+            </div>
+
+            <div class="history-container" id="historyContainer">
+                <div class="loading-state">
+                    <div class="spinner"></div>
+                    <p>Loading orders...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Scan Button -->
+        <button class="fab-scan" onclick="openScanner()">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                <circle cx="12" cy="13" r="4"></circle>
+            </svg>
+            <span class="scan-label">Scan QR</span>
+        </button>
+    </div>
+
+    <!-- Scanner Modal -->
+    <div class="modal-overlay" id="scannerModal">
+        <div class="scanner-modal">
+            <div class="scanner-header">
+                <h2>Scan Order QR</h2>
+                <button class="icon-btn" onclick="closeScanner()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="scanner-viewport">
+                <div id="qrReader"></div>
+                <div class="scanner-overlay">
+                    <div class="scanner-frame"></div>
+                </div>
+            </div>
+
+            <div class="scanner-instructions">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                <p>Position QR code within the frame</p>
+            </div>
+        </div>
+
+        <!-- Scan Result Card -->
+        <div class="scan-result-card" id="scanResultCard" style="display: none;">
+            <div class="result-header">
+                <h3>Order Scanned</h3>
+                <div class="order-ref" id="scannedOrderRef">---</div>
+            </div>
+
+            <div class="result-divider"></div>
+
+            <div class="scanned-items" id="scannedItemsList">
+                <!-- Items will be inserted here -->
+            </div>
+
+            <div class="result-divider"></div>
+
+            <div class="result-total">
+                <span>Total Amount</span>
+                <span class="total-amount">₹<span id="scannedAmount">0</span></span>
+            </div>
+
+            <div class="result-actions">
+                <button class="btn-secondary" onclick="resetScanner()">Discard</button>
+                <button class="btn-primary" onclick="acceptOrder()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    Accept Order
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Token Display Modal -->
+    <div class="modal-overlay" id="tokenModal">
+        <div class="token-display">
+            <div class="token-icon">🎫</div>
+            <div class="token-label">TOKEN NUMBER</div>
+            <div class="token-number" id="displayToken">101</div>
+            <button class="btn-primary btn-lg" onclick="closeTokenModal()">Done</button>
+        </div>
+    </div>
+
+    <!-- Order Detail Modal -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Order Details</h2>
+                <button class="icon-btn" onclick="closeDetailModal()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="detail-content">
+                <div class="detail-header">
+                    <div class="detail-token">
+                        <span class="token-badge">#<span id="detailToken">--</span></span>
+                    </div>
+                    <div class="detail-time">
+                        <span id="detailDate">--</span> • <span id="detailTime">--</span>
+                    </div>
+                </div>
+
+                <div class="detail-divider"></div>
+
+                <div class="detail-items" id="detailItemsList">
+                    <!-- Items will be inserted here -->
+                </div>
+
+                <div class="detail-divider"></div>
+
+                <div class="detail-total">
+                    <span>Total</span>
+                    <span class="total-amount">₹<span id="detailTotal">0</span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/admin-pos.js"></script>
+</body>
+
+</html>

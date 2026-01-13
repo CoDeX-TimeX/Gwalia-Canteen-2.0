@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitchen Display - Gwalia</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/kitchen.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body class="dark-mode kitchen-body">
+    <!-- Header -->
+    <header class="kitchen-header">
+        <div class="kitchen-brand">
+            <div class="brand-icon">👨‍🍳</div>
+            <div>
+                <h1>Kitchen Display</h1>
+                <p id="currentTime">--:--</p>
+            </div>
+        </div>
+        <div class="kitchen-stats">
+            <div class="stat-pill">
+                <span class="stat-label">Queue</span>
+                <span class="stat-number" id="queueCount">0</span>
+            </div>
+            <div class="stat-pill">
+                <span class="stat-label">Preparing</span>
+                <span class="stat-number" id="preparingCount">0</span>
+            </div>
+            <div class="stat-pill success">
+                <span class="stat-label">Completed Today</span>
+                <span class="stat-number" id="completedCount">0</span>
+            </div>
+        </div>
+        <button class="icon-btn" onclick="window.location.reload()">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="23 4 23 10 17 10"></polyline>
+                <polyline points="1 20 1 14 7 14"></polyline>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+            </svg>
+        </button>
+    </header>
+
+    <!-- Orders Container -->
+    <div class="orders-grid" id="ordersGrid">
+        <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Connecting to system...</p>
+        </div>
+    </div>
+
+    <!-- Audio element for notifications -->
+    <audio id="notificationSound" preload="auto">
+        <source
+            src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIGGS57OaZThAMUqzl77RgGgU7k9nyw3ElBSh+y/DajD4KEl+077CcUBELTKXh8bllHAU2jdXzzn4qBSV6yu/akj8KElyw6OyrWBUIQ5zd8sFuJAUne8rx3I4/ChJcr+jsr10UB0Kb3fK8aB4FMYvU88t7KgUme8rx3I4/ChJarejur18WB0CZ2/K8aiEFLYTN8tiIOggTaLrq5pVOEAtNquXvsmEaB0Cd2vK8aiEFLYTN8tiIOggTaLrq5pVOEA1Nq+XvsmEaB0Cd2vK8aiEFLYTN8tiIOggTaLrq5pVOEA1Nq+XvsmEaB0Cd2vK8aiEFLYTN8tiIOggTaLrq5pVOEA1Nq+XvsmEaB0Cd2vK8aiEFLYTN8tiIOggTaLrq5pVOEA1Nq+XvsmEaB0Cd2vK8aiEFLYTN8tiIOggTaLrq5pVOEA1Nq+XvsmEaB0Cd2vK8aiEFLYTN8tiIOggTaLrq5pVOEA1Nq+XvsmEaB0Cd2vK8aiEFLYTN8tiIOggTaLrq5pVOEA1Nq+XvsmEaB0Cd2vK8aiEFLYTN8tiIOggTaLrq5pVOEA1Nq+XvsmEaB0Cd2vK8aiEFLYTN8tiIOggTaLrq5pVOEA1Nq+XvsmEaB0Cd2vK8aiEFLYTN8tiIOggTaLrq5pVOEA1Nq+XvsmEaB0Cd2vK8aiEFLYTN8tiIOggTaLrq5pVOEA1Nq+XvsmEaB0Cd2vK8aiEFLYTN8tiIOggTaLrq5pVOEA1Nq+XvsmEaB0Cd2vK8aiEFLYTN8tiIOggTaLrq5pVOEA1Nq+XvsmEaB0Cd2vK8aiEFLYTN8tiIOggTaLrq5pVOEA1Nq+XvsmEaB0Cd2vK8aiEFLYTN8tiIOggTaLrq5pVOEA1Nq+XvsmEaB0Cd2vK8aiEFLYTN8tiIOggTaLrq5pVOEA1Nq+XvsmEaB0Cd2vK8aiEFLYTN8tiIOggTaLrq5pVOEA1Nq+XvsmEaB0Cd2vK8aiEFLYTN8tiIOggTaLrq5pVOEA1Nq+XvsmEaB0Cd2vK8aiEFLYTN8tiIOggTaLrq5pVOEA1Nq+XvsmEaB0Cd2vK8aiEFLYTN8tiIOg=="
+            type="audio/wav">
+    </audio>
+
+    <!-- Scripts -->
+    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/kitchen.js"></script>
+</body>
+
+</html>
